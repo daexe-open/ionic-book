@@ -1,0 +1,57 @@
+
+/**
+ * Generic/Reusable Animations
+ * --------------------------------------------------
+ */
+
+// Slide Left From Right
+///////////////////////////////////////////////////////
+
+.slide-left-right,
+.slide-right-left.reverse {
+  > .ng-enter, &.ng-enter,
+  > .ng-leave, &.ng-leave {
+    @include transition(all ease-in-out $transition-duration);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+  > .ng-enter, &.ng-enter {
+    /* NEW content placed far RIGHT BEFORE it slides IN from the RIGHT */
+    @include translate3d(100%, 0, 0);
+  }
+  > .ng-enter.ng-enter-active, &.ng-enter.ng-enter-active {
+    /* NEW content ACTIVELY sliding IN from the RIGHT */
+    @include translate3d(0, 0, 0);
+  }
+  > .ng-leave.ng-leave-active, &.ng-leave.ng-leave-active {
+    /* OLD content ACTIVELY sliding OUT to the LEFT */
+    @include translate3d(-100%, 0, 0);
+  }
+}
+
+.slide-left-right.reverse,
+.slide-right-left {
+  > .ng-enter, &.ng-enter, > .ng-leave, &.ng-leave {
+    @include transition(all ease-in-out $transition-duration);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+  > .ng-enter, &.ng-enter {
+    /* NEW content placed far LEFT BEFORE it slides IN from the LEFT */
+    @include translate3d(-100%, 0, 0);
+  }
+  > .ng-enter.ng-enter-active, &.ng-enter.ng-enter-active {
+    /* NEW content ACTIVELY sliding IN from the LEFT */
+    @include translate3d(0, 0, 0);
+  }
+  > .ng-leave.ng-leave-active, &.ng-leave.ng-leave-active {
+    /* OLD content ACTIVELY sliding OUT to the RIGHT */
+    @include translate3d(100%, 0, 0);
+  }
+}
