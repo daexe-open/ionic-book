@@ -1,0 +1,87 @@
+<html ng-app="ionicApp">
+  <head>
+    <meta charset="utf-8">
+    <title>Slide Left Right</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <link href="../../../dist/css/ionic.css" rel="stylesheet">
+    <style>
+
+    .reveal-animation.ng-enter {
+     -webkit-transition: 1s linear all; /* Safari/Chrome */
+     transition: 1s linear all; /* All other modern browsers and IE10+ */
+
+     /* The animation preparation code */
+     opacity: 0;
+    }
+
+    /*
+     Keep in mind that you want to combine both CSS
+     classes together to avoid any CSS-specificity
+     conflicts
+    */
+    .reveal-animation.ng-enter.ng-enter-active {
+     /* The animation code itself */
+     opacity: 1;
+    }
+
+    </style>
+  </head>
+  <body ng-controller="MainCtrl" class="pane">
+
+    <header class="bar bar-header bar-dark">
+      <button ng-click="animateSlideLeftRight()" class="button button-royal">.slide-left-right</button>
+      <h1 class="title">Slide Left Right</h1>
+    </header>
+
+    <div class="scroll-content has-header padding"></div>
+
+    <script src="../../../dist/js/ionic.bundle.js"></script>
+    <script>
+      angular.module('ionicApp', [])
+
+      .controller('MainCtrl', function($scope, $element, $animate) {
+
+        $scope.animateSlideLeftRight = function() {
+
+          var oldElement = angular.element( document.querySelector('.scroll-content') );
+
+          $animate.leave(oldElement, function() {
+            console.log('leave');
+          });
+
+          var randColor = getRandomColor();
+          var randOpacity = getRandomOpacity();
+
+          var newElement = angular.element(
+            '<div class="scroll-content has-header padding reveal-animation">' + randColor + ', ' + randOpacity + '</div>'
+          );
+
+          newElement.css({
+            backgroundColor: randColor
+          });
+
+          $animate.enter(newElement, $element, null, function() {
+            console.log('enter');
+          });
+
+
+
+
+
+
+          // just to get random colors so you can see the transitions
+
+          function getRandomColor() {
+            var bgs = ['red', 'yellow', 'orange', 'blue', 'green', 'purple', 'maroon', 'brown', 'gray', 'black', 'tan', 'pink', 'cyan', 'cadetblue', 'darkgreen', 'wheat', 'lightpink', 'lightgrey', 'teal', 'lawngreen', 'fuchsia', 'yellowgreen', 'bisque', 'powderblue', 'cornflowerblue', 'orchid', 'darkslateblue', 'goldenrod', 'salmon', 'saddlebrown', 'indigo', 'darkolivegreen'];
+            return bgs[ Math.floor( Math.random() * bgs.length ) ];
+          }
+          function getRandomOpacity() {
+            return (Math.floor( Math.random() * 10 ) + 1) / 10;
+          }
+
+        };
+
+      });
+    </script>
+  </body>
+</html>
