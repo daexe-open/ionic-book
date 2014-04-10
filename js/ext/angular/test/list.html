@@ -54,9 +54,12 @@
           </div>
         </ion-header-bar>
 
-        <ion-content class="has-header">
+        <ion-content>
 
           <ion-list show-delete="isDeletingItems" show-reorder="isReorderingItems">
+            <ion-item sticky="true">
+            Hello
+            </ion-item>
             <ion-item item="item" ng-href="#" ng-click="itemClick()" class="item-thumbnail-left" ng-repeat="item in items" ng-class="{ active: item.isActive}">
               <img ng-src="{{item.face}}">
               <h2>{{item.from}}</h2>
