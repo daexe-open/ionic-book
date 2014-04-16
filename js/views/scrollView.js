@@ -408,11 +408,12 @@ ionic.views.Scroll = ionic.views.View.inherit({
 
     this.triggerScrollEvent = ionic.throttle(function() {
       self.onScroll();
-      ionic.trigger('scroll', {
+      var detail = {
         scrollTop: self.__scrollTop,
         scrollLeft: self.__scrollLeft,
         target: self.__container
-      });
+      }
+      ionic.trigger('scroll', detail);
     }, this.options.scrollEventInterval);
 
     this.triggerScrollEndEvent = function() {
