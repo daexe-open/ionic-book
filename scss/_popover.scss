@@ -1,0 +1,18 @@
+.popover {
+  ion-list {
+    position: relative;
+    display: none;
+
+    .list {
+      position: absolute;
+      top: 15px;
+      left: -15px;
+    }
+  }
+
+  &.popover-active {
+    ion-list {
+      display: block;
+    }
+  }
+}
