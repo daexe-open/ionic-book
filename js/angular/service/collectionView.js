@@ -9,8 +9,9 @@ angular.module('ionic')
 
 .factory('$collectionView', [
   '$rootScope',
-function($rootScope) {
-  var ITEMS_ON_SCREEN_BUFFER = 1;
+  '$timeout',
+function($rootScope, $timeout) {
+  var BUFFER_LENGTH = 1;
   function CollectionView(scrollCtrl, dataSource) {
     this.element = scrollCtrl.$element;
     this.scrollView = scrollCtrl.scrollView;
@@ -19,83 +20,109 @@ function($rootScope) {
       throw new Error("Cannot create a scrollCollectionView on an element that scrolls both x and y. Choose one, yo!");
     }
     this.isVertical = !!this.scrollView.options.scrollingY;
-    this.scrollTransformDelta = 0;
-    this.itemScrollSize = 52;
     this.dataSource = dataSource;
 
-    this.renderedItems = [];
+    this.lastRenderScrollValue = 0;
+    this.scrollTransformOffset = 0;
+    this.itemScrollSize = 52;
+    this.renderedItems = {};
 
     this.scrollView.__$callback = this.scrollView.__callback;
     this.scrollView.__callback = angular.bind(this, this.renderScroll);
 
     if (this.isVertical) {
-      this.scrollView.options.getContentHeight = angular.bind(this, this.getScrollSize);
+      this.scrollView.options.getContentHeight = angular.bind(this, this.getContentHeight);
+      this.getScrollValue = function() {
+        return this.scrollView.__scrollTop;
+      };
+      this.getScrollMaxValue = function() {
+        return this.scrollView.__maxScrollTop;
+      };
+      this.getContainerSize = function() {
+        return this.scrollView.__clientHeight;
+      };
     } else {
-      this.scrollView.options.getContentWidth = angular.bind(this, this.getScrollSize);
+      this.scrollView.options.getContentWidth = angular.bind(this, this.getContentHeight);
+      this.getScrollValue = function() {
+        return this.scrollView.__scrollLeft;
+      };
+      this.getScrollMaxValue = function() {
+        return this.scrollView.__maxScrollLeft;
+      };
+      this.getContainerSize = function() {
+        return this.scrollView.__clientWidth;
+      };
     }
     this.scrollView.resize();
+    $timeout(angular.bind(this, this.render));
   }
 
   CollectionView.prototype = {
-    getScrollSize: function() {
+    getContentHeight: function() {
       return this.itemScrollSize * this.dataSource.getLength();
     },
-    renderScroll: function(transformLeft, transformTop, zoom) {
+    renderScroll: function(transformLeft, transformTop, zoom, wasResize) {
       if (this.isVertical) {
-        transformTop = this.changeTransformPosition(transformTop);
+        transformTop = this.getTransformPosition(transformTop);
       } else {
-        transformLeft = this.changeTransformPosition(transformLeft);
+        transformLeft = this.getTransformPosition(transformLeft);
       }
-      return this.scrollView.__$callback(transformLeft, transformTop, zoom);
+      return this.scrollView.__$callback(transformLeft, transformTop, zoom, wasResize);
     },
-    changeTransformPosition: function(transformPos) {
-      var difference = transformPos - this.scrollTransformDelta;
-
-      if (difference >= this.itemScrollSize && transformPos < this.scrollView.__maxScrollTop) {
-        this.setScrollTransformDelta(this.scrollTransformDelta + this.itemScrollSize);
-
-      } else if (difference <= -this.itemScrollSize && transformPos > 0) {
-        this.setScrollTransformDelta(this.scrollTransformDelta - this.itemScrollSize);
-
-      } else if (transformPos <= 0) {
-        this.setScrollTransformDelta(0);
+    getTransformPosition: function(transformPos) {
+      var scrollValue = this.getScrollValue();
+      var difference = transformPos - this.lastRenderScrollValue;
+      if (scrollValue <= 0) {
+        this.lastRenderScrollValue = 0;
       }
-      return transformPos - this.scrollTransformDelta;
-    },
-    setScrollTransformDelta: function(delta) {
-      var newStartIndex = Math.floor(delta / this.itemScrollSize);
-
-      if (newStartIndex !== this.renderStartIndex) {
-        var itemsOnScreen = Math.ceil(this.scrollView.__clientHeight / this.itemScrollSize) + 
-          ITEMS_ON_SCREEN_BUFFER;
-
-        this.renderStartIndex = newStartIndex;
-
-        //Detach rid of items that aren't in the new range
-        this.renderedItems = this.renderedItems.filter(function(item) {
-          if (item.index < this.renderStartIndex || 
-              item.index > this.renderStartIndex + itemsOnScreen) {
-            this.dataSource.detachItem(item);
-            return false;
-          }
-          return true;
-        }, this);
-
-        for (var i = 0; i < itemsOnScreen; i++) {
-          if (!this.renderedItems[i] ||
-              this.renderedItems[i].index !== this.renderStartIndex + i) {
-            this.renderItem(i);
-          }
+      if (transformPos > this.getScrollMaxValue() || scrollValue < 0) {
+        return difference + this.scrollTransformOffset;
+      } else {
+        if (Math.abs(difference) >= this.itemScrollSize) {
+          this.render();
+          difference = difference % this.itemScrollSize;
         }
+        return this.scrollTransformOffset + difference;
+      }
+    },
+    render: function() {
+      var scrollValue = this.getScrollValue();
+      this.viewportStartIndex = Math.floor(scrollValue / this.itemScrollSize);
+      this.viewportItemsCount = Math.ceil(this.getContainerSize() / this.itemScrollSize);
+      this.viewportEndIndex = this.viewportStartIndex + this.viewportItemsCount;
+
+      this.bufferStartIndex = Math.max(this.viewportStartIndex - 1, 0);
+      if (this.bufferStartIndex < this.viewportStartIndex) {
+        this.scrollTransformOffset = this.itemScrollSize;
+      } else {
+        this.scrollTransformOffset = 0;
+      }
+      this.bufferEndIndex = Math.min(this.viewportEndIndex + 1, this.dataSource.getLength() - 1);
+
+      //Detach items that aren't in the new range
+      angular.forEach(this.renderedItems, function(item, dataIndex) {
+        if (dataIndex < this.bufferStartIndex ||
+            dataIndex > this.bufferEndIndex) {
+          this.dataSource.detachItem(item);
+          delete this.renderedItems[dataIndex];
+        }
+      }, this);
+
+      //TODO: For items already in dom, don't re-insert them
+      for (var i = this.bufferStartIndex; i <= this.bufferEndIndex; i++) {
+        this.renderedItems[i] = this.renderItem(i, i - this.bufferStartIndex);
       }
 
-      this.scrollTransformDelta = delta;
+      //Trigger a digest
+      $timeout(angular.noop);
+      this.lastRenderScrollValue = scrollValue;
     },
-    renderItem: function(viewportIndex) {
-      var dataIndex = viewportIndex + this.renderStartIndex;
+    renderItem: function(dataIndex, viewportIndex) {
       var item = this.dataSource.getItem(dataIndex);
-      this.dataSource.attachItem(item, this.renderedItems[viewportIndex]);
-      this.renderedItems.splice(viewportIndex, 0, item);
+      if (item) {
+        this.dataSource.attachItem(item);
+        return item;
+      }
     }
   };
 
@@ -134,6 +161,9 @@ function() {
     },
     getItem: function(index) {
       var value = this.data[index];
+      if (!value) {
+        return;
+      }
       var item = this.itemCache.get(value);
       if (!item) {
         item = this.renderItem(value);
