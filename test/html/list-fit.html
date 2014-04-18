@@ -11,18 +11,29 @@
   </head>
   <body>
     <ion-content ng-controller="MainCtrl">
+
+  <body ng-controller="MainCtrl">
+    <ion-header-bar class="bar-positive">
+      <h1 class="title">Hi</h1>
+      <a class="button" ng-click="scrollBottom(true)">
+        Bottom
+      </a>
+    </ion-header-bar>
+    <ion-content>
       <ul class="list">
-        <li class="item" scroll-collection-repeat="i in items">
+        <li class="item" scroll-collection-repeat="i in items" scroll-item-size="52">
           {{i}}
         </li>
       </ul>
     </ion-content>
   <script>
-function MainCtrl($scope) {
+function MainCtrl($scope, $ionicScrollDelegate) {
   $scope.items = [];
-  for (var i = 0; i < 20; i++) {
+  for (var i = 0; i < 1000; i++) {
     $scope.items.push('item '+i);
   }
+
+  $scope.scrollBottom = $ionicScrollDelegate.scrollBottom;
 }
   </script>
   </body>
