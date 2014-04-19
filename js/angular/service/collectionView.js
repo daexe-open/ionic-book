@@ -5,8 +5,7 @@
  * - Each element has a corresponding cache with element, scope, and pointer to its corresponding item value
  */
 
-angular.module('ionic')
-
+IonicModule
 .factory('$collectionView', [
   '$rootScope',
   '$timeout',
@@ -64,14 +63,14 @@ function($rootScope, $timeout) {
     getContentSize: function() {
       return this.itemScrollSize * this.dataSource.getLength();
     },
-    renderScroll: function(transformLeft, transformTop, zoom, wasResize) {
+    renderScroll: ionic.animationFrameThrottle(function(transformLeft, transformTop, zoom, wasResize) {
       if (this.isVertical) {
         transformTop = this.getTransformPosition(transformTop);
       } else {
         transformLeft = this.getTransformPosition(transformLeft);
       }
       return this.scrollView.__$callback(transformLeft, transformTop, zoom, wasResize);
-    },
+    }),
     getTransformPosition: function(transformPos) {
       var difference = transformPos - this.lastRenderScrollValue;
       if (Math.abs(difference - this.scrollTransformOffset) >= this.itemScrollSize) {
@@ -99,25 +98,25 @@ function($rootScope, $timeout) {
       //If the change in index is bigger than our list size, rerender everything
       if (bufferEndIndex - this.bufferEndIndex > this.bufferItemsLength) {
         for (i = bufferStartIndex; i <= bufferEndIndex; i++) {
-          this.appendItem(i);
+          this.renderItem(i);
         }
       //Append new items if scrolling down
       } else if (bufferEndIndex > this.bufferEndIndex) {
         for (i = this.bufferEndIndex + 1; i <= bufferEndIndex; i++) {
-          this.appendItem(i);
+          this.renderItem(i);
         }
       //Prepend new items if scrolling up
       } else if (bufferStartIndex < this.bufferStartIndex) {
         for (i = this.bufferStartIndex - 1; i >= bufferStartIndex; i--) {
-          this.prependItem(i);
+          this.renderItem(i, true);
         }
       }
 
       //Detach items that aren't in the new range
-      for (var dataIndex in this.renderedItems) {
-        if (dataIndex < bufferStartIndex ||
-            dataIndex > bufferEndIndex) {
-          this.removeItem(dataIndex);
+      for (i in this.renderedItems) {
+        if (i < bufferStartIndex ||
+            i > bufferEndIndex) {
+          this.removeItem(i);
         }
       }
 
@@ -131,14 +130,8 @@ function($rootScope, $timeout) {
         this.dataSource.scope.$digest();
       } catch(e) {}
     },
-    prependItem: function(dataIndex) {
-      return this.renderItem(dataIndex, true);
-    },
-    appendItem: function(dataIndex) {
-      return this.renderItem(dataIndex, false);
-    },
     renderItem: function(dataIndex, shouldPrepend) {
-      var item = this.dataSource.getItem(dataIndex);
+      var item = this.dataSource.getItemAt(dataIndex); 
       if (item) {
         this.dataSource.attachItem(item, shouldPrepend);
         this.renderedItems[dataIndex] = item;
@@ -147,7 +140,7 @@ function($rootScope, $timeout) {
     removeItem: function(dataIndex) {
       var item = this.renderedItems[dataIndex];
       if (item) {
-        this.dataSource.detachItem(this.renderedItems[dataIndex]);
+        this.dataSource.detachItem(item);
         delete this.renderedItems[dataIndex];
       }
     }
@@ -161,7 +154,7 @@ function($rootScope, $timeout) {
 function($cacheFactory) {
   var nextCacheId = 0;
   function ItemCache() {
-    this.cache = $cacheFactory(nextCacheId++, { size: 500 });
+    this.cache = $cacheFactory(nextCacheId++);
   }
   ItemCache.prototype = {
     put: function(key, value) {
@@ -180,14 +173,16 @@ function($cacheFactory) {
 
     var keys = this.expression.split(/\s+in\s+/);
     this.keyExpression = keys[0];
-    this.listExpression = keys[1];
+    this.listExpression = keys[1].split(/\s+/)[0];
 
     this.scope.$watch(this.listExpression, angular.bind(this, this.dataWatchAction));
     this.dataWatchAction(this.scope.$eval(this.listExpression));
   }
   CollectionViewDataSource.prototype = {
-    compileItem: function(index) {
-      var value = this.data[index];
+    compileItem: function(value) {
+      var cachedItem = this.itemCache.get(value);
+      if (cachedItem) return cachedItem;
+
       var childScope = this.scope.$new();
       var element;
 
@@ -196,34 +191,33 @@ function($cacheFactory) {
       this.transcludeFn(childScope, function(clone) {
         element = clone;
       });
-      return {
+
+      return this.itemCache.put(value, {
         element: element,
         scope: childScope
-      };
+      });
     },
-    getItem: function(index) {
+    getItemAt: function(index) {
       if (index >= this.getLength()) return;
 
       var value = this.data[index];
-      var item = this.itemCache.get(value);
-      if (!item) {
-        item = this.compileItem(index);
-        this.itemCache.put(value, item);
-      }
+      var item = this.compileItem(value);
 
-      item.scope.$index = item.index = index;
-      item.scope.$first = (index === 0);
-      item.scope.$last = (index === (this.getLength() - 1));
-      item.scope.$middle = !(item.scope.$first || item.scope.$last);
-      item.scope.$odd = !(item.scope.$even = (index&1) === 0);
+      if (item.scope.$index !== index) {
+        item.scope.$index = item.index = index;
+        item.scope.$first = (index === 0);
+        item.scope.$last = (index === (this.getLength() - 1));
+        item.scope.$middle = !(item.scope.$first || item.scope.$last);
+        item.scope.$odd = !(item.scope.$even = (index&1) === 0);
+      }
 
       return item;
     },
     attachItem: function(item, shouldPrepend) {
       if (shouldPrepend) {
-        this.transcludeParent.prepend(item.element);
+        this.transcludeParent[0].insertBefore(item.element[0], this.transcludeParent[0].firstElementChild);
       } else {
-        this.transcludeParent.append(item.element);
+        this.transcludeParent[0].appendChild(item.element[0]);
       }
       reconnectScope(item.scope);
     },
@@ -245,6 +239,9 @@ function($cacheFactory) {
     },
     dataWatchAction: function(newValue, oldValue) {
       this.data = newValue;
+      // this.data.forEach(function(value, index) {
+      //   this.compileItem(value);
+      // }, this);
     },
   };
 
@@ -298,7 +295,7 @@ function hashKey(obj) {
       // must invoke on object to keep the right this
       key = obj.$$hashKey();
     } else if (key === undefined) {
-      key = obj.$$hashKey = ionic.Util.nextUid();
+      key = obj.$$hashKey = ionic.Utils.nextUid();
     }
   } else {
     key = obj;
@@ -306,37 +303,6 @@ function hashKey(obj) {
 
   return objType + ':' + key;
 }
-
-function HashMap(){
-}
-HashMap.prototype = {
-  /**
-   * Store key value pair
-   * @param key key to store can be any type
-   * @param value value to store can be any type
-   */
-  put: function(key, value) {
-    this[hashKey(key)] = value;
-  },
-
-  /**
-   * @param key
-   * @returns the value for the key
-   */
-  get: function(key) {
-    return this[hashKey(key)];
-  },
-
-  /**
-   * Remove the key/value pair
-   * @param key
-   */
-  remove: function(key) {
-    var value = this[key = hashKey(key)];
-    delete this[key];
-    return value;
-  }
-};
 
 function disconnectScope(scope) {
   if (scope.$root === scope) {

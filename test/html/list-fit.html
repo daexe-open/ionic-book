@@ -21,20 +21,38 @@
     </ion-header-bar>
     <ion-content>
       <ul class="list">
-        <li class="item" scroll-collection-repeat="i in items" scroll-item-size="52">
-          {{i}}
-        </li>
+      <div class="superrow row" scroll-collection-repeat="item in items" 
+        scroll-item-size="106">
+        <div class="col card">{{item[0]}}</div>
+        <div class="col card">{{item[1]}}</div>
+        <div class="col card">{{item[2]}}</div>
+      </div>
       </ul>
     </ion-content>
   <script>
 function MainCtrl($scope, $ionicScrollDelegate) {
   $scope.items = [];
-  for (var i = 0; i < 1000; i++) {
-    $scope.items.push('item '+i);
+  for (var i = 0; i < 1000; i+=3) {
+    $scope.items.push([i, i+1, i+2]);
   }
 
   $scope.scrollBottom = $ionicScrollDelegate.scrollBottom;
 }
   </script>
+  <style>
+div.row.superrow {
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+  height: 106px;
+}
+  .superrow.row .card {
+    background: red;
+    text-align: center;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    border: none;
+  }
   </body>
 </html>
