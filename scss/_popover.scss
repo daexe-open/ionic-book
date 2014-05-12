@@ -1,4 +1,4 @@
-.popdown {
+.popover {
   ion-list {
     position: relative;
     display: none;
@@ -10,7 +10,7 @@
     }
   }
 
-  &.popdown-active {
+  &.popover-active {
     ion-list {
       display: block;
     }
