@@ -161,7 +161,8 @@
 }
 
 .button-icon {
-  @include transition(opacity .1s);
+  @include transition(color .1s);
+  @include button-clear($button-default-border);
   padding: 0 6px;
   min-width: initial;
   border-color: transparent;
@@ -172,7 +173,7 @@
     border-color: transparent;
     background: none;
     box-shadow: none;
-    opacity: 0.3;
+    //opacity: 0.3;
   }
 
   .icon:before,

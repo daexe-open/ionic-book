@@ -6,7 +6,25 @@
     .list {
       position: absolute;
       top: 15px;
-      left: -15px;
+      right: 0px;
+    }
+
+    .item {
+      padding: 10px 15px;
+      min-width: 150px;
+      text-align: left;
+
+      &:first-child {
+        border-radius: $popover-border-radius-top;
+      }
+      &:last-child {
+        border-radius: $popover-border-radius-bottom;
+      }
+    }
+    .item-divider {
+      background-color: #fff;
+      padding: 10px 0px;
+      text-align: center;
     }
   }
 

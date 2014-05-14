@@ -645,6 +645,11 @@ $badge-dark-text:                 $button-dark-text !default;
 $badge-default-bg:                transparent !default;
 $badge-default-text:              #AAAAAA !default;
 
+// Popovers
+// -------------------------------
+
+$popover-border-radius-top: 3px 3px 0px 0px;
+$popover-border-radius-bottom: 0px 0px 3px 3px;
 
 // Z-Indexes
 // -------------------------------

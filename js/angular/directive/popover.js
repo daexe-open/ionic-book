@@ -15,7 +15,7 @@
  * ```
  */
 IonicModule
-.directive('ionPopover', ['$document', function($document) {
+.directive('ionPopover', ['$document', '$ionicBackdrop', function($document, $ionicBackdrop) {
   return {
     restrict: 'A',
     compile: function(element, attr) {
@@ -33,10 +33,12 @@ IonicModule
       };
 
       var open = function() {
+        //$ionicBackdrop.retain();
         element.addClass('popover-active');
       };
 
       var close = function() {
+        //$ionicBackdrop.release();
         element.removeClass('popover-active');
       };
 

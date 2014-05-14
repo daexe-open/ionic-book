@@ -7,7 +7,7 @@
   background-color: $bg-color;
   color: $color;
 
-  &.button-clear {
+  &.button-clear, &.button-icon {
     &.active,
     &.activated {
       color: rgba($color, 0.7) !important;
@@ -28,6 +28,23 @@
 }
 
 @mixin button-clear($color, $font-size:"") {
+  &.button-clear {
+    border-color: transparent;
+    background: none;
+    box-shadow: none;
+    color: $color;
+
+    @if $font-size != "" {
+      font-size: $font-size;
+    }
+  }
+  &.button-icon {
+    border-color: transparent;
+    background: none;
+  }
+}
+
+@mixin button-icon($color, $font-size:"") {
   &.button-clear {
     border-color: transparent;
     background: none;
