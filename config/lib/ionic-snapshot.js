@@ -36,8 +36,11 @@ var IonicSnapshot = function(options) {
       });
     }
 
+    self.platformId = browser.params.platform_id;
+
     console.log('width', self.width);
     console.log('height', self.height);
+    console.log('platformId', self.platformId);
 
     self.flow.execute(function(){
       var d = protractor.promise.defer();
@@ -47,6 +50,7 @@ var IonicSnapshot = function(options) {
         var data = {
           compare: self.compare,
           test_id: self.testId,
+          platform_id: self.platformId,
           width: self.width,
           height: self.height,
           browser: capabilities.get('browserName'),
@@ -119,7 +123,7 @@ var IonicSnapshot = function(options) {
                     var jsonData = JSON.parse(body);
                     self.totalCompares++;
                     self.totalRMS = self.totalRMS + jsonData.rms;
-                    self.highestRMS = Math.max(self.highestRMS, jsonData.rms)
+                    self.highestRMS = Math.max(self.highestRMS, jsonData.rms);
                   } catch(e) {
                     console.error('Error posting screenshot');
                     console.error(e);
@@ -143,7 +147,6 @@ var IonicSnapshot = function(options) {
 
       return d.promise;
     });
-
   };
 
   IonicReporter.prototype.onComplete = function(d) {
@@ -183,7 +186,8 @@ var IonicSnapshot = function(options) {
   options.testId = browser.params.test_id;
 
   if(!options.testId) {
-    console.error('--params.test_id=XXX cmd line arg w/ unique ID required')
+    console.error('--params.test_id w/ unique ID required');
+    browser.driver.quit();
     return;
   }
 

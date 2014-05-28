@@ -1,5 +1,4 @@
 var gulp = require('gulp');
-var karma = require('karma').server;
 var path = require('canonical-path');
 var pkg = require('./package.json');
 var semver = require('semver');
@@ -10,7 +9,6 @@ var argv = require('minimist')(process.argv.slice(2));
 var _ = require('lodash');
 var buildConfig = require('./config/build.config.js');
 var changelog = require('conventional-changelog');
-var connect = require('connect');
 var dgeni = require('dgeni');
 var es = require('event-stream');
 var htmlparser = require('htmlparser2');
@@ -21,7 +19,6 @@ var mkdirp = require('mkdirp');
 var twitter = require('node-twitter-api');
 var yaml = require('js-yaml');
 
-var http = require('http');
 var cp = require('child_process');
 var fs = require('fs');
 
@@ -48,6 +45,11 @@ if (IS_RELEASE_BUILD) {
   );
 }
 
+/**
+ * Load Test Tasks
+ */
+require('./config/gulp-tasks/test')(gulp, argv);
+
 if (argv.dist) {
   buildConfig.dist = argv.dist;
 }
@@ -56,18 +58,40 @@ gulp.task('default', ['build']);
 gulp.task('build', ['bundle', 'sass']);
 gulp.task('validate', ['jshint', 'ddescribe-iit', 'karma']);
 
-gulp.task('docs', function(done) {
-  var docVersion = argv['doc-version'];
+gulp.task('docs', function() {
+  var docVersion = argv['doc-version'] || 'nightly';
   if (docVersion != 'nightly' && !semver.valid(docVersion)) {
     console.log('Usage: gulp docs --doc-version=(nightly|versionName)');
     return process.exit(1);
   }
 
-  var config = dgeni.loadConfig(path.join(__dirname, '/config/dgeni/docs.config.js'));
+  var config = dgeni.loadConfig(path.join(__dirname, '/config/docs/docs.config.js'));
   config.set('currentVersion', docVersion);
 
   return dgeni.generator(config)().then(function() {
     gutil.log('Docs for', gutil.colors.cyan(docVersion), 'generated!');
+  });
+});
+
+gulp.task('demos', function(done) {
+  var demoVersion = argv['demo-version'] || 'nightly';
+  if (demoVersion != 'nightly' && !semver.valid(demoVersion)) {
+    console.log('Usage: gulp docs --doc-version=(nightly|versionName)');
+    return process.exit(1);
+  }
+
+  var config = dgeni.loadConfig(path.join(__dirname, '/config/demos/demos.config.js'));
+  config.set('currentVersion', demoVersion);
+
+  dgeni.generator(config)().then(function() {
+    gutil.log('Demos for', gutil.colors.cyan(demoVersion), 'generated!');
+    gutil.log('Building ionic into demo folder...');
+    cp.spawn('gulp', [
+      'build',
+      IS_RELEASE_BUILD ? '--release' : '--no-release',
+      '--dist='+config.get('rendering.outputFolder')+'/'+config.get('rendering.contentsFolder')+'/ionic'
+    ])
+    .on('exit', done);
   });
 });
 
@@ -109,7 +133,7 @@ gulp.task('bundle', [
   'vendor',
   'version',
 ], function() {
-  IS_RELEASE_BUILD && gulp.src(buildConfig.ionicBundleFiles.map(function(src) {
+  gulp.src(buildConfig.ionicBundleFiles.map(function(src) {
       return src.replace(/.js$/, '.min.js');
     }), {
       base: buildConfig.dist,
@@ -384,96 +408,6 @@ gulp.task('docs-index', function() {
     });
 });
 
-gulp.task('sauce-connect', sauceConnect);
-
-gulp.task('cloudtest', ['protractor-sauce'], function(cb) {
-  sauceDisconnect(cb);
-});
-
-gulp.task('karma', function(cb) {
-  var config = require('./config/karma.conf.js');
-  config.singleRun = true;
-  if (argv.browsers) {
-    config.browsers = argv.browsers.trim().split(',');
-  }
-  if (argv.reporters) {
-    config.reporters = argv.reporters.trim().split(',');
-  }
-  return karma.start(config, cb);
-});
-gulp.task('karma-watch', function(cb) {
-  return karma.start(_.assign(require('./config/karma.conf.js'), {singleRun: false}), cb);
-});
-gulp.task('karma-sauce', ['sauce-connect'], function(cb) {
-  return karma.start(require('./config/karma-sauce.conf.js'), function() {
-    sauceDisconnect(cb);
-  });
-});
-
-var connectServer;
-gulp.task('connect-server', function() {
-  var app = connect().use(connect.static(__dirname));
-  connectServer = http.createServer(app).listen(8765);
-});
-gulp.task('snapshot', ['connect-server'], function(cb) {
-  var uuid = require('node-uuid');
-  return protractor(cb, [
-    'config/protractor.conf.js',
-    '--test_id=' + uuid.v4()
-  ]);
-});
-gulp.task('protractor', ['connect-server'], function(cb) {
-  return protractor(cb, ['config/protractor.conf.js']);
-});
-gulp.task('protractor-sauce', ['sauce-connect', 'connect-server'], function(cb) {
-  return protractor(cb, ['config/protractor-sauce.conf.js']);
-});
-
-function karma(cb, args) {
-  cp.spawn('node', [
-    __dirname + '/node_modules/karma/bin/karma',
-    'start'
-  ].concat(args), { stdio: 'inherit' })
-  .on('exit', function(code) {
-    if (code) return cb('Karma test(s) failed. Exit code: ' + code);
-    cb();
-  });
-}
-
-function pad(n) {
-  if (n<10) { return '0' + n; }
-  return n;
-}
-
-function protractor(cb, args) {
-  cp.spawn('protractor', args, { stdio: 'inherit' })
-  .on('exit', function(code) {
-    connectServer && connectServer.close();
-    if (code) return cb('Protector test(s) failed. Exit code: ' + code);
-    cb();
-  });
-}
-
-var sauceInstance;
-function sauceConnect(cb) {
-  require('sauce-connect-launcher')({
-    username: process.env.SAUCE_USER,
-    accessKey: process.env.SAUCE_KEY,
-    verbose: true,
-    tunnelIdentifier: process.env.TRAVIS_BUILD_NUMBER
-  }, function(err, instance) {
-    if (err) return cb('Failed to launch sauce connect!');
-    sauceInstance = instance;
-    cb();
-  });
-}
-
-function sauceDisconnect(cb) {
-  if (sauceInstance) {
-    return sauceInstance.close(cb);
-  }
-  cb();
-}
 
 function notContains(disallowed) {
   disallowed = disallowed || [];
@@ -502,4 +436,8 @@ function notContains(disallowed) {
     // Return the match accounting for the first submatch length.
     return match !== null ? match.index + match[1].length : -1;
   }
+}
+function pad(n) {
+  if (n<10) { return '0' + n; }
+  return n;
 }
