@@ -112,7 +112,7 @@ var IonicSnapshot = function(options) {
                     var jsonData = JSON.parse(body);
                     self.totalCompares++;
                     self.totalRMS = self.totalRMS + jsonData.rms;
-                    self.highestRMS = Math.max(self.highestRMS, jsonData.rms)
+                    self.highestRMS = Math.max(self.highestRMS, jsonData.rms);
                   } catch(e) {
                     console.error('Error posting screenshot');
                     console.error(e);
@@ -136,7 +136,6 @@ var IonicSnapshot = function(options) {
 
       return d.promise;
     });
-
   };
 
   IonicReporter.prototype.onComplete = function(d) {
@@ -182,7 +181,7 @@ var IonicSnapshot = function(options) {
   }
 
   if(!options.testId) {
-    console.error('--test_id=XXX cmd line arg w/ unique ID required')
+    console.error('--test_id=XXX cmd line arg w/ unique ID required');
     return;
   }
 
