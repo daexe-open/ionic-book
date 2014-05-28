@@ -1,4 +1,4 @@
-// An example configuration file.
+
 exports.config = {
 
   // Spec patterns are relative to the location of the spec file. They may
@@ -15,25 +15,15 @@ exports.config = {
 
   chromeOnly: false,
 
-  multiCapabilities: [
-    {
-      'browserName': 'chrome'
-    },
-    {
-      'browserName': 'safari'
-    }
-  ],
-
   onPrepare: function() {
     var ionicSnapshot = require('./lib/ionic-snapshot.js');
     ionicSnapshot({
       groupId: 'ionic',
       appId: 'kitchen-sink',
-      accessKey: process.env.IONIC_SNAPSHOT_KEY,
-      width: 400,
-      height: 818,
+      accessKey: process.env.IONIC_SNAPSHOT_KEY
     });
   }
 
 };
 
+// protractor config/protractor.conf.js --browser chrome --params.width 400 --params.height 800 --params.test_id 123
