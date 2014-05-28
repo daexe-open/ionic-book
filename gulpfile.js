@@ -415,6 +415,13 @@ gulp.task('connect-server', function() {
   var app = connect().use(connect.static(__dirname));
   connectServer = http.createServer(app).listen(8765);
 });
+gulp.task('snapshot', ['connect-server'], function(cb) {
+  var uuid = require('node-uuid');
+  return protractor(cb, [
+    'config/protractor.conf.js',
+    '--test_id=' + uuid.v4()
+  ]);
+});
 gulp.task('protractor', ['connect-server'], function(cb) {
   return protractor(cb, ['config/protractor.conf.js']);
 });
