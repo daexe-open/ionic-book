@@ -8,7 +8,7 @@ env:
   - SNAPSHOT_HEIGHT=800
 branches:
   only:
-    - master
+    - shippable
 before_install:
   - npm install -g protractor gulp
 script:
