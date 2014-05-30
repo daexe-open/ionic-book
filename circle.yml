@@ -8,13 +8,8 @@ machine:
     SNAPSHOT_HEIGHT: 800
 dependencies:
   pre:
-    # Install protractor and gulp locally first time,
-    # they will be cached with the rest of node_modules
-    # subsequently
-    - npm install protractor gulp
+    - npm install -g protractor gulp
+    - echo "gulp loc is $(which gulp)"
 test:
   override:
-    # Use aliases to refer to protractor and gulp globally
-    - alias protractor=$PWD/node_modules/bin/protractor
-    - alias gulp=$PWD/node_modules/bin/gulp
     - ./scripts/shippable/ci.sh
