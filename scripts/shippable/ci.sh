@@ -14,7 +14,7 @@ function run {
   cd ../..
 
   export SNAPSHOT_TEST_ID=$(git rev-parse HEAD)
-  export SAUCE_TUNNEL_ID=$CIRCLE_BUILD_DUM
+  export SAUCE_TUNNEL_ID=$CIRCLE_BUILD_NUM
   export SAUCE_BUILD_ID=$CIRCLE_SHA1
 
   echo "CIRCLE_BUILD_NUM=$CIRCLE_BUILD_NUM"
