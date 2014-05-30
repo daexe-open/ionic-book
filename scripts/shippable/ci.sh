@@ -17,6 +17,9 @@ function run {
   export SAUCE_TUNNEL_ID=$CIRCLE_BUILD_DUM
   export SAUCE_BUILD_ID=$CIRCLE_SHA1
 
+  echo "CIRCLE_BUILD_NUM=$CIRCLE_BUILD_NUM"
+  echo "CIRCLE_SHA1=$CIRCLE_SHA1"
+
   gulp demos --demo-version=nightly
 
   gulp snapshot-sauce \

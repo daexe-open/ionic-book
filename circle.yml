@@ -9,7 +9,6 @@ machine:
 dependencies:
   pre:
     - npm install -g protractor gulp
-    - echo "gulp loc is $(which gulp)"
 test:
   override:
     - ./scripts/shippable/ci.sh
