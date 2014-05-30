@@ -100,11 +100,22 @@ module.exports = function(gulp, argv) {
   }
 
   function protractor(done, args) {
-    cp.spawn('protractor', args, { stdio: 'inherit' })
-    .on('exit', function(code) {
-      connectServer && connectServer.close();
-      if (code) return done('Protector test(s) failed. Exit code: ' + code);
-      done();
+    var errored = false;
+    var child = cp.spawn('protractor', args, {
+      stdio: [process.stdin, process.stdout, 'pipe']
+    });
+
+    child.stderr.on('data', function(data) {
+      errored = true;
+      connectServer.close();
+      done('Protractor tests failed. Error:', data.toString());
+    });
+
+    child.on('exit', function() {
+      if (!errored) {
+        connectServer.close();
+        done();
+      }
     });
   }
 };

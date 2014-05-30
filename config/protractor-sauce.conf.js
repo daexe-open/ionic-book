@@ -15,5 +15,3 @@ exports.config = _.merge({}, config, {
   }
 });
 
-console.log('protractor-sauce config:', exports.config);
-
