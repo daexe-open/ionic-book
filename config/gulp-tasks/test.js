@@ -2,6 +2,7 @@ var _ = require('lodash');
 var buildConfig = require('../build.config');
 var connect = require('connect');
 var cp = require('child_process');
+var gutil = require('gulp-util');
 var http = require('http');
 var karma = require('karma').server;
 var uuid = require('node-uuid');
@@ -16,10 +17,12 @@ module.exports = function(gulp, argv) {
    */
   var sauceInstance;
   gulp.task('sauce-connect', function(done) {
+    gutil.log('process.env =', _.pick(process.env, ['SAUCE_USER', 'SAUCE_KEY', 'SAUCE_TUNNEL_ID']));
     require('sauce-connect-launcher')({
       username: process.env.SAUCE_USER,
       accessKey: process.env.SAUCE_KEY,
-      tunnelIdentifier: process.env.SAUCE_TUNNEL_ID
+      tunnelIdentifier: process.env.SAUCE_TUNNEL_ID || 0,
+      verbose: true
     }, function(err, instance) {
       if (err) return done('Failed to launch sauce connect!');
       sauceInstance = instance;
