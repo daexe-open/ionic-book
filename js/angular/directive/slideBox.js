@@ -80,6 +80,10 @@ function($timeout, $compile, $ionicSlideBoxDelegate) {
         }
       });
 
+      $element[0].addEventListener('slide', function(e) {
+        console.log(e.detail.dist);
+      });
+
       slider.enableSlide($scope.$eval($attrs.disableScroll) !== true);
 
       $scope.$watch('activeSlide', function(nv) {
@@ -135,6 +139,7 @@ function($timeout, $compile, $ionicSlideBoxDelegate) {
     }
   };
 }])
+
 .directive('ionSlide', function() {
   return {
     restrict: 'E',

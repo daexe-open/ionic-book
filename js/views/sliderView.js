@@ -181,7 +181,6 @@ ionic.views.Slider = ionic.views.View.inherit({
       style.msTransform =
       style.MozTransform =
       style.OTransform = 'translateX(' + dist + 'px)';
-
     }
 
     function animate(from, to, speed) {
@@ -359,6 +358,12 @@ ionic.views.Slider = ionic.views.View.inherit({
             translate(index-1, delta.x + slidePos[index-1], 0);
             translate(index, delta.x + slidePos[index], 0);
             translate(index+1, delta.x + slidePos[index+1], 0);
+
+            ionic.trigger('slide', {
+              dist: delta.x,
+              target: options.el
+            });
+
           }
 
         }
