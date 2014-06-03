@@ -3,7 +3,13 @@ machine:
     version: v0.10.26
 dependencies:
   pre:
-    - npm install -g protractor gulp
+    - git config --global user.name 'Ionitron'
+    - git config --global user.email hi@ionicframework.com
 test:
   override:
-    - ./scripts/circle/run.sh: {parallel: true}
+    - ./scripts/circle/test.sh --index=$CIRCLE_NODE_INDEX --total=$CIRCLE_NODE_TOTAL: {parallel: true}
+deployment:
+  tasks:
+    branch: wip-circleci
+    commands:
+      - ./scripts/circle/deploy.sh --is-release=false --version-name=nightly: {parallel: true}
