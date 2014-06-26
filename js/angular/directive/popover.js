@@ -15,44 +15,74 @@
  * ```
  */
 IonicModule
-.directive('ionPopover', ['$document', function($document) {
+.directive('ionPopover', ['$document', '$animate', '$parse', '$timeout',
+function($document, $animate, $parse, $timeout) {
   return {
     restrict: 'A',
+    controller: [function(){}],
     compile: function(element, attr) {
-      element.addClass('popover')
+      element.addClass('popover-parent');
+      return function link(scope, element, attr, popoverCtrl) {
+        var isOpen = false;
+        var popoverIsShown = $parse(attr.ionPopover);
 
-      var docClose = function(e) {
-        if(e.type === 'keyup' && e.which == 27) {
-          element.removeClass('popover-active');
-        } else if(e.type !== 'keyup') { 
-          element.removeClass('popover-active');
+        if (!popoverIsShown.assign) {
+          throw new Error('ion-popover expected an assignable expression for attribute ' + 
+                          'ion-popover, got ion-popover="' + attr.ionPopover + '"!');
         }
 
-        $document.off('click', docClose);
-        $document.off('keyup', docClose);
-      };
+        scope.$watch(attr.ionPopover, popoverWatchAction);
 
-      var open = function() {
-        element.addClass('popover-active');
-      };
-
-      var close = function() {
-        element.removeClass('popover-active');
-      };
-
-      element.on('click', function(e) {
-        if(element.hasClass('popover-active')) {
-          close();
-          $document.off('click', docClose);
-          $document.off('keyup', docClose);
-        } else {
-          open();
-          $document.on('click', docClose);
-          $document.on('keyup', docClose);
+        function popoverWatchAction(shouldShow) {
+          if (shouldShow) {
+            openPopover();
+          } else {
+            closePopover();
+          }
         }
 
-        return e.stopPropagation();
-      });
+        function openPopover() {
+          if (isOpen) return;
+          isOpen = true;
+
+          popoverCtrl.content && $animate.enter(popoverCtrl.content, element);
+          $document.on('click', documentClosePopover);
+        }
+
+        function closePopover() {
+          if (!isOpen) return;
+          isOpen = false;
+
+          popoverCtrl.content && $animate.leave(popoverCtrl.content);
+          $document.off('click', documentClosePopover);
+        }
+
+        function documentClosePopover(e) {
+          if (!ionic.DomUtil.getParentOrSelfWithClass(e.target, 'popover-parent', 5)) {
+            e.stopPropagation();
+            $timeout(function() {
+              popoverIsShown.assign(scope, false);
+            });
+          }
+        }
+      };
+
     }
-  }
+  };
+}])
+.directive('ionPopoverContent', ['$animate', function($animate) {
+  return {
+    restrict: 'E',
+    require: '^ionPopover',
+    transclude: true,
+    replace: true,
+    template: 
+      '<div class="popover">' +
+        '<div class="popover-content" ng-transclude></div>' +
+      '</div>',
+    link: function(scope, element, attr, popoverCtrl) {
+      element.remove();
+      popoverCtrl.content = element;
+    }
+  };
 }]);

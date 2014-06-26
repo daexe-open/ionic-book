@@ -1,18 +1,35 @@
 .popover {
-  ion-list {
-    position: relative;
-    display: none;
-
-    .list {
-      position: absolute;
-      top: 15px;
-      left: -15px;
-    }
+  &.ng-enter {
+    -webkit-animation: popoverIn 0.1s;
   }
+  &.ng-leave {
+    -webkit-animation: popoverOut 0.1s;
+  }
+  // position: relative;
+  // .popover-content {
+  //   position: absolute;
+  //   top: 15px;
+  //   left: -15px;
+  // }
+}
 
-  &.popover-active {
-    ion-list {
-      display: block;
-    }
+@-webkit-keyframes popoverIn {
+  0% {
+    -webkit-transform: scale(0.8) translateY(-20px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+@-webkit-keyframes popoverOut {
+  0% {
+    -webkit-transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: scale(0.9) translateY(-10px);
+    opacity: 0;
   }
 }

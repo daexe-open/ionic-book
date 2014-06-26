@@ -63,20 +63,26 @@ function($document) {
     _element: el
   };
 
-  function retain() {
+  function retain(done) {
     if ( (++backdropHolds) === 1 ) {
       el.addClass('visible');
       ionic.requestAnimationFrame(function() {
         backdropHolds && el.addClass('active');
+        (done || angular.noop)();
       });
+    } else {
+      (done || angular.noop)();
     }
   }
-  function release() {
+  function release(done) {
     if ( (--backdropHolds) === 0 ) {
       el.removeClass('active');
       setTimeout(function() {
         !backdropHolds && el.removeClass('visible');
+        (done || angular.noop)();
       }, 100);
+    } else {
+      (done || angular.noop)();
     }
   }
 

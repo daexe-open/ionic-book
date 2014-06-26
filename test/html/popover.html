@@ -5,21 +5,23 @@
 
     <!-- Sets initial viewport load and disables zooming  -->
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link rel="stylesheet" href="../../../../dist/css/ionic.css">
+    <link rel="stylesheet" href="/dist/css/ionic.css">
 
-    <script src="../../../../dist/js/ionic.bundle.js"></script>
+    <script src="/dist/js/ionic.bundle.js"></script>
 
   </head>
   <body ng-controller="PopupCtrl">
     <ion-header-bar class="bar-stable">
       <h1 class="title">Popdowns</h1>
-      <button class="button button-clear" ion-popover>
+      <button class="button button-clear" ion-popover="shouldPop" ng-click="shouldPop = !shouldPop">
         Options
-        <ion-list>
-          <ion-item ng-click="alert('item 1')">Item 1</ion-item>
-          <ion-item ng-click="alert('item 2')">Item 2</ion-item>
-          <ion-item ng-click="alert('item 3')">Item 3</ion-item>
-        </ion-list>
+        <ion-popover-content>
+          <ion-list>
+            <div class="item">1</div>
+            <div class="item">2</div>
+            <div class="item">3</div>
+          </ion-list>
+        </ion-popover-content>
       </button>
     </ion-header-bar>
     <ion-content>
