@@ -316,6 +316,9 @@ ionic.views.Scroll = ionic.views.View.inherit({
       minScrollbarSizeX: 5,
       minScrollbarSizeY: 5,
 
+      minDecelerationVelocityX: 0,
+      minDecelerationVelocityY: 0,
+
       /** Scrollbar fading after scrolling */
       scrollbarsFade: true,
       scrollbarFadeDelay: 300,
@@ -1523,10 +1526,10 @@ ionic.views.Scroll = ionic.views.View.inherit({
 
 
   /*
-  ---------------------------------------------------------------------------
-    EVENT CALLBACKS
-  ---------------------------------------------------------------------------
-  */
+     ---------------------------------------------------------------------------
+     EVENT CALLBACKS
+     ---------------------------------------------------------------------------
+     */
 
   /**
    * Mouse wheel handler for zooming support
@@ -1781,7 +1784,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
       // Sync scroll position
       self.__publish(scrollLeft, scrollTop, level);
 
-    // Otherwise figure out whether we are switching into dragging mode now.
+      // Otherwise figure out whether we are switching into dragging mode now.
     } else {
 
       var minimumTrackingForScroll = self.options.locking ? 3 : 0;
@@ -1865,8 +1868,18 @@ ionic.views.Scroll = ionic.views.View.inherit({
           var movedTop = self.__scrollTop - positions[startPos - 1];
 
           // Based on 50ms compute the movement to apply for each render step
-          self.__decelerationVelocityX = movedLeft / timeOffset * (1000 / 60);
-          self.__decelerationVelocityY = movedTop / timeOffset * (1000 / 60);
+          // self.__decelerationVelocityX = movedLeft / timeOffset * (1000 / 60);
+          // self.__decelerationVelocityY = movedTop / timeOffset * (1000 / 60);
+          var decelX = movedLeft / timeOffset * (1000 / 60);
+          var decelY = movedTop / timeOffset * (1000 / 60);
+
+          self.__decelerationVelocityX = decelX > 0 ?
+            Math.max(self.options.minDecelerationVelocityX, decelX) :
+            Math.min(-self.options.minDecelerationVelocityX, decelX);
+          self.__decelerationVelocityY = decelY > 0 ?
+            Math.max(self.options.minDecelerationVelocityY, decelY) :
+            Math.min(-self.options.minDecelerationVelocityY, decelY);
+
 
           // How much velocity is required to start the deceleration
           var minVelocityToStartDeceleration = self.options.paging || self.options.snapping ? 4 : 1;
@@ -1931,10 +1944,10 @@ ionic.views.Scroll = ionic.views.View.inherit({
 
 
   /*
-  ---------------------------------------------------------------------------
-    PRIVATE API
-  ---------------------------------------------------------------------------
-  */
+     ---------------------------------------------------------------------------
+     PRIVATE API
+     ---------------------------------------------------------------------------
+     */
 
   /**
    * Applies the scroll position to the content element
@@ -2067,10 +2080,10 @@ ionic.views.Scroll = ionic.views.View.inherit({
   },
 
   /*
-  ---------------------------------------------------------------------------
-    ANIMATION (DECELERATION) SUPPORT
-  ---------------------------------------------------------------------------
-  */
+     ---------------------------------------------------------------------------
+     ANIMATION (DECELERATION) SUPPORT
+     ---------------------------------------------------------------------------
+     */
 
   /**
    * Called when a touch sequence end and the speed of the finger was high enough

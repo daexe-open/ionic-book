@@ -45,15 +45,10 @@
 
     <div ng-controller="SlideCtrl">
       <ion-side-menus>
-        <ion-side-menu-content edge-drag-threshold="true">
+        <ion-side-menu-content>
           <ion-header-bar left-buttons="leftButtons" right-buttons="rightButtons" title=""></ion-header-bar>
-          <ion-slide-box-two
-            on-slide-changed="slideChanged(index)"
-            show-pager="true"
-            pager-click="pagerClick(index)"
-            does-continue="true"
-            auto-play="false">
-            <ion-slide-two ng-controller="FirstSlideCtrl">
+          <ion-slide-box on-slide-changed="slideChanged(index)" show-pager="true" pager-click="pagerClick(index)" does-continue="true" auto-play="false">
+            <ion-slide ng-controller="FirstSlideCtrl">
               <h3>Thank you for choosing the Awesome App!</h3>
               <div id="logo">
                 <img src="app_icon.png">
@@ -70,8 +65,8 @@
               <p>
                 <button class="button button-dark" ng-click="clickTest()">Click Test</button>
               </p>
-            </ion-slide-two>
-            <ion-slide-two>
+            </ion-slide>
+            <ion-slide>
               <h3>Using Awesome</h3>
 
               <div id="list">
@@ -82,11 +77,13 @@
                   <li>There is no step 3</li>
                 </ol>
               </div>
-            </ion-slide-two>
-            <ion-slide-two>
-            Hello
-            </ion-slide-two>
-          </ion-slide-box-two>
+            </ion-slide>
+            <ion-slide>
+              <ion-content class="has-header">
+                <div style="width: 300px; height: 2000px; background: url('tree_bark.png') repeat"></div>
+              </ion-content>
+            </ion-slide>
+          </ion-slide-box>
         </ion-side-menu-content>
         <ion-side-menu side="left">
           <header class="bar bar-header bar-assertive">

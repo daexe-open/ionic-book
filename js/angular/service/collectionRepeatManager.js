@@ -137,9 +137,7 @@ function($rootScope, $timeout) {
       this.viewportSize = lastItem ? lastItem.primaryPos + lastItem.primarySize : 0;
       this.setCurrentIndex(0);
       this.render(true);
-      if (!this.dataSource.backupItemsArray.length) {
-        this.dataSource.setup();
-      }
+      this.dataSource.setup();
     },
     /*
      * setCurrentIndex sets the index in the list that matches the scroller's position.

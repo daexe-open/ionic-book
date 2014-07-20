@@ -6,9 +6,11 @@
 
 .slider {
   position: relative;
-  visibility: hidden;
+  // visibility: hidden;
   // Make sure items don't scroll over ever
   overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 
 .slider-slides {
@@ -17,12 +19,10 @@
 }
 
 .slider-slide {
-  position: relative;
-  display: block;
-  float: left;
+  display: inline-block;
+  position: absolute;
   width: 100%;
   height: 100%;
-  vertical-align: top;
 }
 
 .slider-slide-image {
