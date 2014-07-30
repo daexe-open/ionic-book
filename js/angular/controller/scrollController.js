@@ -66,6 +66,12 @@ function($scope, scrollViewOptions, $timeout, $window, $$scrollValueCache, $loca
     if (self._rememberScrollId) {
       $$scrollValueCache[self._rememberScrollId] = scrollView.getValues();
     }
+    var parent = $element.parent();
+    if (parent.length) {
+      if (parent.data('$$ionicScrollController') === self) {
+        parent.removeData('$$ionicScrollController');
+      }
+    }
   });
 
   $element.on('scroll', function(e) {

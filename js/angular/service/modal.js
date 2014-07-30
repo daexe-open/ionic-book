@@ -104,6 +104,11 @@ function($rootScope, $document, $compile, $timeout, $ionicPlatform, $ionicTempla
     initialize: function(opts) {
       ionic.views.Modal.prototype.initialize.call(this, opts);
       this.animation = opts.animation || 'slide-in-up';
+
+      this.enterAnimation = ionic.Animation.modal(jqLite(this.modalEl), null, false);
+      this.leaveAnimation = ionic.Animation.modal(null, jqLite(this.modalEl), true);
+
+      this.leaveAnimation.easing('ease-in-out').duration(250);
     },
 
     /**
@@ -122,19 +127,9 @@ function($rootScope, $document, $compile, $timeout, $ionicPlatform, $ionicTempla
 
       var modalEl = jqLite(self.modalEl);
 
-      self.el.classList.remove('hide');
-      $timeout(function(){
-        $document[0].body.classList.add('modal-open');
-      }, 400);
-
-
       if(!self.el.parentElement) {
-        modalEl.addClass(self.animation);
         $document[0].body.appendChild(self.el);
       }
-
-      modalEl.addClass('ng-enter active')
-             .removeClass('ng-leave ng-leave-active');
 
       self._isShown = true;
       self._deregisterBackButton = $ionicPlatform.registerBackButtonAction(
@@ -142,25 +137,32 @@ function($rootScope, $document, $compile, $timeout, $ionicPlatform, $ionicTempla
         PLATFORM_BACK_BUTTON_PRIORITY_MODAL
       );
 
-      self._isOpenPromise = $q.defer();
-
       ionic.views.Modal.prototype.show.call(self);
 
-      $timeout(function(){
-        modalEl.addClass('ng-enter-active');
-        ionic.trigger('resize');
-        self.scope.$parent && self.scope.$parent.$broadcast('modal.shown', self);
-        self.el.classList.add('active');
-      }, 20);
+      self.el.classList.remove('hide');
+      $document[0].body.classList.add('modal-open');
+      ionic.trigger('resize');
+      self.scope.$parent && self.scope.$parent.$broadcast('modal.shown', self);
 
-      return $timeout(function() {
-        //After animating in, allow hide on backdrop click
-        self.$el.on('click', function(e) {
-          if (self.backdropClickToClose && e.target === self.el) {
-            self.hide();
-          }
+      this.leaveAnimation.stop();
+      this.enterAnimation
+        .percent(0)
+        .start()
+        .once('step', function() {
+          //Make active on first frame
+          self.el.classList.add('active');
+        })
+        .on('complete', function() {
+          self.el.classList.add('active');
+          //After animating in, allow hide on backdrop click
+          self.$el.on('click', function(e) {
+            if (self.backdropClickToClose && e.target === self.el) {
+              self.hide();
+            }
+          });
         });
-      }, 400);
+
+      return $q.when(this.enterAnimation.promise());
     },
 
     /**
@@ -174,12 +176,6 @@ function($rootScope, $document, $compile, $timeout, $ionicPlatform, $ionicTempla
       var modalEl = jqLite(self.modalEl);
 
       self.el.classList.remove('active');
-      modalEl.addClass('ng-leave');
-
-      $timeout(function(){
-        modalEl.addClass('ng-leave-active')
-               .removeClass('ng-enter ng-enter-active active');
-      }, 20);
 
       self.$el.off('click');
       self._isShown = false;
@@ -188,10 +184,16 @@ function($rootScope, $document, $compile, $timeout, $ionicPlatform, $ionicTempla
 
       ionic.views.Modal.prototype.hide.call(self);
 
-      return $timeout(function(){
-        $document[0].body.classList.remove('modal-open');
-        self.el.classList.add('hide');
-      }, 500);
+      this.enterAnimation.stop();
+      this.leaveAnimation
+        .percent(0)
+        .start()
+        .on('complete', function() {
+          $document[0].body.classList.remove('modal-open');
+          self.el.classList.add('hide');
+        });
+
+      return $q.when(this.leaveAnimation.promise());
     },
 
     /**

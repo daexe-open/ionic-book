@@ -6,6 +6,7 @@
     <title>navViews and ion-tabs w/ nested navViews</title>
 
     <link rel="stylesheet" href="../../../../dist/css/ionic.css">
+    <script src="/bower_components/collide/collide.js"></script>
     <script src="../../../../dist/js/ionic.bundle.js"></script>
     <script src="dom-trace.js"></script>
   </head>
@@ -24,8 +25,6 @@
       <ion-view title="Page 1">
         <ion-nav-buttons side="right">
           <button class="button button-icon ion-android-search"></button>
-          <button class="button button-icon ion-android-information"></button>
-          <button class="button button-icon ion-android-share"></button>
         </ion-nav-buttons>
         <ion-content padding="true">
           <ion-list>
@@ -109,7 +108,7 @@
           $ionicNavBarDelegate.back();
         };
        })
-      
+
     </script>
   </body>
 </html>

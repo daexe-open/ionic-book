@@ -172,16 +172,18 @@ function( $ionicViewService,   $state,   $compile,   $controller,   $animate) {
             return element.append(initialView);
           }
 
-          var newElement = jqLite('<div></div>').html(locals.$template).contents();
+          var newElement = jqLite('<div></div>').html(locals.$template).children();
           var viewRegisterData = renderer().register(newElement);
 
-          // Remove existing content
-          renderer(doAnimate).leave();
+          // // Remove existing content
+          // renderer(doAnimate).leave();
 
           viewLocals = locals;
           view.state = locals.$$state;
 
-          renderer(doAnimate).enter(newElement);
+          renderer(doAnimate).animate(newElement, element.children());
+
+          element.append(newElement);
 
           var link = $compile(newElement);
           viewScope = scope.$new();

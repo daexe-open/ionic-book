@@ -371,6 +371,7 @@ $ios-transition-box-shadow-end: -200px 0px 200px rgba(0,0,0,0.15), -5px 0px 5px 
     @include translate3d(-15%, 0, 0);
   }
 }
+
 .slide-left-right-ios7.reverse,
 .slide-right-left-ios7 {
   > .ng-enter, &.ng-enter, > .ng-leave, &.ng-leave {

@@ -36,7 +36,7 @@ module.exports = {
     'js/ionic.js',
 
     // Utils
-    'js/utils/animate.js',
+    'js/utils/animations.js',
     'js/utils/dom.js',
     'js/utils/events.js',
     'js/utils/gestures.js',
@@ -62,12 +62,6 @@ module.exports = {
     'js/controllers/viewController.js',
     'js/controllers/sideMenuController.js',
 
-    // Animation
-    'js/animation/animation.js',
-    'js/animation/bezier.js',
-    'js/animation/dynamics.js',
-    'js/animation/timing-functions.js',
-    'js/animation/instance.js'
   ],
 
   angularIonicFiles: [

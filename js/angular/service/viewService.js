@@ -2,6 +2,7 @@
  * @private
  * TODO document
  */
+
 IonicModule
 .run([
   '$rootScope',
@@ -470,6 +471,26 @@ function($rootScope, $state, $location, $window, $injector, $animate, $ionicNavV
 
         return {
 
+          animate: function(enterEl, leaveEl) {
+            var isReverse = registerData.navDirection === 'back';
+            document.body.classList.add('disable-pointer-events');
+
+            if (shouldAnimate) {
+              var animator = ionic.Animation['slide-left-right-ios7'](enterEl, leaveEl, isReverse)
+                .on('complete', animationComplete)
+                .percent(0)
+                .start();
+            } else {
+              animationComplete();
+            }
+
+            function animationComplete() {
+              document.body.classList.remove('disable-pointer-events');
+              leaveEl.remove();
+              animator && animator.destroy();
+            }
+          },
+
           enter: function(element) {
 
             if(doAnimation && shouldAnimate) {
@@ -480,10 +501,6 @@ function($rootScope, $state, $location, $window, $injector, $animate, $ionicNavV
               document.body.classList.add('disable-pointer-events');
 
               $animate.enter(element, navViewElement, null, function() {
-                document.body.classList.remove('disable-pointer-events');
-                if (animationClass) {
-                  navViewElement[0].classList.remove(animationClass);
-                }
               });
               return;
             } else if(!doAnimation) {
