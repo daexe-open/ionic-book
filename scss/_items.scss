@@ -750,8 +750,12 @@ button.item.item-button-right {
   z-index: $z-index-item-options;
   height: 100%;
 
+  @include display-flex();
+  @include flex-direction(row);
+
   .button {
-    height: 100%;
+    @include flex(1);
+    @include align-items(flex-end);
     border: none;
     border-radius: 0;
   }

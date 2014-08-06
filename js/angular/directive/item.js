@@ -1,7 +1,3 @@
-var ITEM_TPL_CONTENT_ANCHOR =
-  '<a class="item-content" ng-href="{{$href()}}" target="{{$target()}}"></a>';
-var ITEM_TPL_CONTENT =
-  '<div class="item-content"></div>';
 /**
 * @ngdoc directive
 * @name ionItem
@@ -31,11 +27,54 @@ IonicModule
 function($animate, $compile) {
   return {
     restrict: 'E',
-    controller: ['$scope', '$element', function($scope, $element) {
-      this.$scope = $scope;
-      this.$element = $element;
-    }],
     scope: true,
+    controller: ['$scope', '$element', function($scope, $element, optionButton) {
+      var self = this;
+
+      self.$scope = $scope;
+      self.$element = $element;
+
+      self.optionsContainer = null;
+      self.addOptionButton = function(element) {
+        if (!self.optionsContainer) {
+          self.optionsContainer = jqLite('<div class="item-options">');
+          $element.append(self.optionsContainer);
+        }
+        self.optionsContainer.append(element);
+      };
+
+      var optionsWidth;
+      function refreshOptionsWidth() {
+        optionsWidth = self.optionsContainer ? self.optionsContainer.prop('offsetWidth') : 0;
+      }
+      var optionsAnimator = collide.animator({
+        duration: 250,
+        easing: 'linear'
+      })
+        .on('step', function(percent) {
+          $element.css(ionic.CSS.TRANSFORM, 'translateX(-' + (optionsWidth * percent) + 'px)');
+        });
+
+      var dragState;
+      $element.on('drag', function(e) {
+        if (!dragState) {
+          refreshOptionsWidth();
+          optionsAnimator.reverse(false);
+          dragState = {
+            startX: e.gesture.center.pageX
+          };
+        }
+        var percent = (e.gesture.direction === 'left' ? 1 : -1) *
+          (dragState.startX - e.gesture.center.pageX) / optionsWidth;
+        console.log(percent);
+        optionsAnimator.percent(percent);
+      });
+      $element.on('release', function(e) {
+        var isOpen = optionsAnimator.percent() > 0.5;
+        optionsAnimator.reverse(!isOpen).start();
+        dragState = null;
+      });
+    }],
     compile: function($element, $attrs) {
       var isAnchor = angular.isDefined($attrs.href) ||
         angular.isDefined($attrs.ngHref) ||
@@ -45,7 +84,11 @@ function($animate, $compile) {
         /ion-(delete|option|reorder)-button/i.test($element.html());
 
         if (isComplexItem) {
-          var innerElement = jqLite(isAnchor ? ITEM_TPL_CONTENT_ANCHOR : ITEM_TPL_CONTENT);
+          var innerElement = jqLite(
+            isAnchor ?
+            '<a class="item-content" ng-href="{{$href()}}" target="{{$target()}}"></a>' :
+            '<div class="item-content"></div>'
+          );
           innerElement.append($element.contents());
 
           $element.append(innerElement);

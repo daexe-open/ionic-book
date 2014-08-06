@@ -503,17 +503,18 @@
         }
       }
 
-      // Or check if this is a swipe to the side drag
-      else if(!this._didDragUpOrDown && (e.gesture.direction == 'left' || e.gesture.direction == 'right') && Math.abs(e.gesture.deltaX) > 5) {
+      // option button dragging moved
+      // // Or check if this is a swipe to the side drag
+      // else if(!this._didDragUpOrDown && (e.gesture.direction == 'left' || e.gesture.direction == 'right') && Math.abs(e.gesture.deltaX) > 5) {
 
-        // Make sure this is an item with buttons
-        item = this._getItem(e.target);
-        if(item && item.querySelector('.item-options')) {
-          this._dragOp = new SlideDrag({ el: this.el, canSwipe: this.canSwipe });
-          this._dragOp.start(e);
-          e.preventDefault();
-        }
-      }
+      //   // Make sure this is an item with buttons
+      //   item = this._getItem(e.target);
+      //   if(item && item.querySelector('.item-options')) {
+      //     this._dragOp = new SlideDrag({ el: this.el, canSwipe: this.canSwipe });
+      //     this._dragOp.start(e);
+      //     e.preventDefault();
+      //   }
+      // }
 
       // If we had a last drag operation and this is a new one on a different item, clean that last one
       if(lastDragOp && this._dragOp && !this._dragOp.isSameItem(lastDragOp) && e.defaultPrevented) {

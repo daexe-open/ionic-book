@@ -117,6 +117,24 @@ function($animate, $timeout) {
             }
           });
 
+          var dragItem;
+          ionic.onGesture('drag', function(e) {
+            if (!dragItem) {
+              var item = ionic.DomUtil.getParentOrSelfWithClass(e.target, 'item-content');
+              if (item) {
+                dragItem = jqLite(dragItem);
+              }
+            }
+            if (dragItem) {
+              dragItem.triggerHandler('drag', e);
+            }
+          }, $element[0]);
+
+          ionic.onGesture('release', function(e) {
+            dragItem && dragItem.triggerHandler('release', e);
+            dragItem = null;
+          }, $element[0]);
+
           if (isDefined($attr.canSwipe)) {
             $scope.$watch('!!(' + $attr.canSwipe + ')', function(value) {
               listCtrl.canSwipeItems(value);

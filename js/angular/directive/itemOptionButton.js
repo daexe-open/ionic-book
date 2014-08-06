@@ -39,11 +39,7 @@ IonicModule
     compile: function($element, $attr) {
       $attr.$set('class', ($attr['class'] || '') + ' button', true);
       return function($scope, $element, $attr, itemCtrl) {
-        if (!itemCtrl.optionsContainer) {
-          itemCtrl.optionsContainer = jqLite(ITEM_TPL_OPTION_BUTTONS);
-          itemCtrl.$element.append(itemCtrl.optionsContainer);
-        }
-        itemCtrl.optionsContainer.append($element);
+        itemCtrl.addOptionButton($element);
 
         //Don't bubble click up to main .item
         $element.on('click', stopPropagation);
