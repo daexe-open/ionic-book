@@ -1,5 +1,0 @@
-# Glossary
-
-## sadsad
-
-sadsadsad
