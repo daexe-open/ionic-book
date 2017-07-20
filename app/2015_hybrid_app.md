@@ -1,11 +1,8 @@
 ### 一些平台
 今年似乎正刮一阵Hybrid开发风，这里说说三款不同的Hybrid开发框架， Native.js ， AppCan ， Intel XDK，各自有不同的思路和实现，给Web开发者们提供了不同的App开发平台和能力，那就一个个分别说说。
-教程索引：(持续更新)
-[ionic中文教程](/README.md)
+教程索引：[ionic中文教程](/README.md)
 <!--more-->
 ![](/assets/ionic.png)
-
-转载请注明出处：http://www.haomou.net/2015/03/31/2015_hybrid_app/
 
 ### Native_js
 
