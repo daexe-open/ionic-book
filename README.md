@@ -11,12 +11,17 @@ ionic是一个专注于用WEB开发技术，基于HTML5创建类似于手机平�
 
 ### 1. 搭建环境
 
-[1.1 ionic框架配置](http://www.haomou.net/2014/08/07/2014_ionic/)  
-[1.2 ionic开发插件之ngCordova配置安装](http://www.haomou.net/2015/01/05/2015_ionic_ngCordova/)  
-[1.3 phoneGap之Android环境搭建](http://www.haomou.net/2014/08/06/2014_phonegap_android/)  
-[1.4 MAC下Android环境与cordova搭建](http://www.haomou.net/2015/01/06/2015_mac_android/)  
-[1.5 Android最新SDK内容合集](http://www.haomou.net/2015/07/21/2015_android/)  
-[1.6 ionic工具类API和配置](http://www.haomou.net/2015/08/18/2015_ionic_tools/)
+[1.1 ionic框架配置](/2014_ionic.md)
+
+[1.2 ionic开发插件之ngCordova配置安装](/2015_ionic_ngCordova.md)
+
+[1.3 phoneGap之Android环境搭建](/da-jian-huan-jing/2014_phonegap_android.md)
+
+[1.4 MAC下Android环境与cordova搭建](/2015_mac_android.md)
+
+[1.5 Android最新SDK内容合集](/blog/2015_android.md)
+
+[1.6 ionic工具类API和配置](/2015_ionic_tools.md)
 
 ### 2. 学习css常用样式
 
