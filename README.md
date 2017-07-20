@@ -1,4 +1,4 @@
-### ionic中文教程 {#ionic简介}
+### ionic中文教程
 
 ![](/assets/ionic.png)
 
