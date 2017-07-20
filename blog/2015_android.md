@@ -1,16 +1,11 @@
-title: Android最新SDK内容合集
-date: 2015-07-21 13:25:06
-tags:
-- android
-categories: ionic|reapp
----
 ### 下载AndroidSDk好辛苦
 打开android SDK manager，更新了半天，啥也没有。苦逼的android开发者，哎～～～喜讯来了，经过博主欢哥的不懈追求与研究，发现咱们可以手动操作，速度刚刚的。先配置好ANDROID_HOME环境变量，然后手动下载SDK以及需要的各个平台和相应的build tools等等，放到对应的目录就可以了，windows的应该直接覆盖或者放到对应目录就可以了。
 
-教程索引：(持续更新)
-[ionic中文教程](http://www.haomou.net/2014/10/06/2014_ionic_learn/)
+教程索引：[ionic中文教程](/README.md)
 <!--more-->
-<img class="floatnone" alt="皓眸大前端开发学习" src="/images/2015_android.jpg"/>
+![](/assets/ionic.png)
+
+
 
 ### Android SDK
 Android SDK (Android SDK主安装包，包含SDK Manager、AVD Manager、工具包tools，释放后的根文件夹为android-sdk-windows):
@@ -532,5 +527,7 @@ http://mirror.neu.edu.cn/android/
 
 ### 谢谢！
 
-转载请注明出处：[Android最新SDK内容合集](http://www.haomou.net/2015/07/21/2015_android/) : http://www.haomou.net/2015/07/21/2015_android/
-有问题请留言。T_T  皓眸大前端开发学习  T_T
+有问题请留言。T_T  别忘了给我点亮GIT星星哦！
+欢迎关注我的博客: [皓眸大前端](http://www.haomou.net/)
+
+

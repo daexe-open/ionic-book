@@ -1,18 +1,9 @@
-title: ionic工具类API和配置
-date: 2015-08-18 12:59:45
-tags:
-- ionic
-- 教程
-categories: ionic|reapp
----
 ### 一些配置
 哎，真是不好意思。之前翻译Ionic教程的时候，忘记翻译ionic工具类api和配置这一块了。之前一致比较忙，忘记了。很多朋友经常问一些配置问题，比如为什么android的tab导航在上面，ios的tab导航在下面？...等等。其实这些都可以在ionic里面配置的。下面看我一一道来。
-教程索引：(持续更新)
-[ionic中文教程](http://www.haomou.net/2014/10/06/2014_ionic_learn/)
+教程索引：[ionic中文教程](/README.md)
 <!--more-->
-<img class="floatnone" alt="皓眸大前端开发学习" src="/images/ionic.png"/>
+![](/assets/ionic.png)
 
-转载请注明出处：http://haomou.net/2015/08/18/2015_ionic_tools/
 
 ### $ionicConfigProvider
 $ionicConfigProvider可是一个神器，可以配置很多东东。比如配置view的缓存，配置tab栏的显示位置，配置过渡动画等等。
@@ -180,6 +171,6 @@ What grade the current platform is.
 
 
 ### 谢谢！
-转载请注明出处：http://haomou.net/2015/08/18/2015_ionic_tools/
+有问题请留言。T_T  别忘了给我点亮GIT星星哦！
+欢迎关注我的博客: [皓眸大前端](http://www.haomou.net/)
 
-有问题请留言。T_T  皓眸大前端开发学习  T_T

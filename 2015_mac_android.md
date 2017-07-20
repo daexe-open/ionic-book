@@ -1,19 +1,9 @@
-title: MAC下Android环境与cordova搭建
-date: 2015-01-06 06:06:06
-tags:
-- ionic
-- 教程
-categories: ionic|reapp
----
 ### MAC下玩Android
 为什么需要在mac下用Android，这个主要是因为前几天手痒，哈哈，把系统装成了黑苹果。不过用起来还是蛮流畅的，所以就用这个，懒得换了。熟悉熟悉mac也挺好的，在一个就是现在在学习ionic和cordova，做完项目后可以同时编译生成Android和ios手机app，这样挺方便的。你是不是也心动了，快点动手吧。
-
-教程索引：(持续更新)
-[ionic中文教程](http://www.haomou.net/2014/10/06/2014_ionic_learn/)
+教程索引：[ionic中文教程](/README.md)
 <!--more-->
-<img class="floatnone" alt="皓眸大前端开发学习" src="/images/mac_android1.jpeg"/>
+![](/assets/ionic.png)
 
-转载请注明出处：http://www.haomou.net/2015/01/06/2015_mac_android/
 
 ### 安装工具
 1、最好选择ADT Bundle，这里面已经集成好了Eclipse、ADT、Android SDK Tools，不用自己去设置了。
@@ -218,7 +208,6 @@ https://software.intel.com/en-us/android/articles/intel-atom-x86-image-for-andro
 
 总结一下，我折腾了半天，发现一个问题。起始只要升级一下Android SDK platform-tools就可以了，怎么升级呢，看下图，升级之后重新开启这个sdk Manager就可以了，汗死了！！
 ### 谢谢！
+有问题请留言。T_T  别忘了给我点亮GIT星星哦！
+欢迎关注我的博客: [皓眸大前端](http://www.haomou.net/)
 
-转载请注明出处：http://www.haomou.net/2015/01/06/2015_mac_android/
-
-有问题请留言。T_T  皓眸大前端开发学习  T_T

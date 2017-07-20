@@ -1,20 +1,11 @@
-title: phoneGap之Android环境搭建
-date: 2014-08-06 10:40:49
-tags:
-- phonegap
-- android
-categories:
-- ionic|reapp
----
 ### PhoneGap说明
 
 PhoneGap，一早就听说有这么一个神奇的应用，它可以把WEB项目打包成各种移动平台的应用程序。这里我就研究一下，把之前开发的WebRTC项目打包成Android平台的apk文件试一下。正好公司现在比较缺少Android应用开发人员，看来web应用还是很有前景的。不过在网上看过不少评论说PhoneGap打包的程序运行比较慢，用户体验差，和native应用没的一比，这里也算是是做个小实验，自己看看到底怎么样。
-
-教程索引：(持续更新)
-[ionic中文教程](http://www.haomou.net/2014/10/06/2014_ionic_learn/)
+教程索引：[ionic中文教程](/README.md)
 <!--more-->
+![](/assets/ionic.png)
 
-转载请注明出处：http://www.haomou.net/2014/08/06/2014_phonegap_android/
+
 ### PhoneGap与cordova
 后面会讲到cordova，主要用这个生成项目。为了不至混淆，这里解释一下。
 PhoneGap是一个用基于HTML，CSS和JavaScript的，创建移动跨平台移动应用程序的快速开发平台。它使开发者能够利用iPhone，Android，Palm，Symbian,WP7,Bada和Blackberry智能手机的核心功能——包括地理定位，加速器，联系人，声音和振动等，此外PhoneGap拥有丰富的插件，可以调用。
@@ -76,4 +67,7 @@ No system images installed for this target
 方法2：关闭Eclipse，删掉C:\Users\用户名\.android文件夹下的所有内容，再重启Eclipse。
 
 ### 谢谢！
-有问题请留言。T_T  皓眸大前端开发学习  T_T
+有问题请留言。T_T  别忘了给我点亮GIT星星哦！
+欢迎关注我的博客: [皓眸大前端](http://www.haomou.net/)
+
+

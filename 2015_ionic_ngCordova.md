@@ -1,19 +1,8 @@
-title: ionic开发插件之ngCordova配置安装
-date: 2015-01-05 05:05:15
-tags:
-- ionic
-- 教程
-categories: ionic|reapp
----
 ### ngCordova是什么
 开始学ionic的时候就嫌弃ionic做不了与手机硬件紧密结合的APP，今天无意中看到了另外一个项目ngCordova，福音啊。神马拍照啊，文件上传啊，地理位置啊，借助ngCordova插件都可以实现。ngCordova是结合cordova和angular包装了许多插件，诸如访问文件，摄像头，GPS等等，这些插件只需要简单配置就可以在ionic中使用。
-
-教程索引：(持续更新)
-[ionic中文教程](http://www.haomou.net/2014/10/06/2014_ionic_learn/)
+教程索引：[ionic中文教程](/README.md)
 <!--more-->
-<img class="floatnone" alt="皓眸大前端开发学习" src="/images/ionicstart.png"/>
-
-转载请注明出处：http://www.haomou.net/2015/01/05/2015_ionic_ngCordova/
+![](/assets/ionic.png)
 
 ### 为什么ngCordova
 ngCordova是在Cordova Api基础上封装的一系列开源的AngularJs服务和扩展，让开发者可以方便的在HybridApp开发中调用设备能力，即可以在AngularJs代码中访问设备能力Api。
@@ -54,6 +43,6 @@ cordova plugin add ...
 http://ngcordova.com/docs/plugins/
 
 ### 谢谢！
-转载请注明出处：http://www.haomou.net/2015/01/05/2015_ionic_ngCordova/
+有问题请留言。T_T  别忘了给我点亮GIT星星哦！
+欢迎关注我的博客: [皓眸大前端](http://www.haomou.net/)
 
-有问题请留言。T_T  皓眸大前端开发学习  T_T
