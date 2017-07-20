@@ -7,7 +7,7 @@ ionic是一个专注于用WEB开发技术，基于HTML5创建类似于手机平�
 ### 0. Hybrid\_APP {#0-Hybrid-APP}
 
 [0.1 Hybrid\_APP说一说](/app/2015_hybrid_app.md)  
-[0.2 Ionic在IOS9中BUG修复](http://www.haomou.net/2015/10/27/2015_ionic_ios9_patch/)
+[0.2 Ionic在IOS9中BUG修复](/2015_ionic_ios9_patch.md)
 
 ### 1. 搭建环境 {#1-搭建环境}
 

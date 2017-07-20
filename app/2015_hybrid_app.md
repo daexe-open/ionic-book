@@ -78,5 +78,5 @@ ionic browser revert ios
 ionic browser rm crosswalk
 ```
 ### 谢谢！
-有问题请留言。T_T 别忘了给我点亮星星哦！
+有问题请留言。T_T  别忘了给我点亮GIT星星哦！
 欢迎关注我的博客: [皓眸大前端](http://www.haomou.net/)

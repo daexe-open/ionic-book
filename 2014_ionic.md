@@ -1,21 +1,10 @@
-title: ionic框架配置
-date: 2014-08-07 17:40:49
-tags:
-- ionic
-- phonegap
-categories:
-- ionic|reapp
----
 ### ionic概述
 
 这段时间在做手机应用开发，由于目前部分缺少Android开发人员，所以想做个WebApp的形式，然后用phoneGap打包，先做第一个样品试用。研究了比较多的开发框架，后来自己用AngularJS和Ratchet搭建了一个小框架，做的差不多了，然后感觉有些限制，用cordova编译之后，在Android平台上的运行效果并是不太好。所以又看了一下其他的框架，比如：Lungo和QuoJS等，突然发现了一个目前比较先进的框架ionic，所以就拿来用用。目前文档比较少，有的也仅是翻译官网的，所以我把自己的配置过程记录一下，分享给喜欢的同学。
-教程索引：(持续更新)
-[ionic中文教程](http://www.haomou.net/2014/10/06/2014_ionic_learn/)
-
+教程索引：[ionic中文教程](/README.md)
 <!--more-->
-<img alt="皓眸大前端开发学习" src="/images/ionic.png" class="floatnone" alt="皓眸大前端开发学习"/>
+![](/assets/ionic.png)
 
-转载请注明出处：http://www.haomou.net/2014/08/07/2014_ionic/
 ### ionic简介
 ionic是一个专注于用WEB开发技术，基于HTML5创建类似于手机平台原生应用的一个开发框架。目前绑定的与angularJS和SASS。这个框架的目的是从web的角度开发手机应用，基于PhoneGap的编译平台，可以实现编译成各个平台的应用程序。
 ### ionic安装
@@ -58,7 +47,7 @@ ionic serve
 Ionic Lab 是桌面版的开发环境，如果你不喜欢使用命令行操作，Ionic Lab 将会满足你的需求。
 Ionic Lab 为开发者提供了一个更简单的方法来开始，编译，运行，和模拟运行Ionic的应用程序。
 Ionic Lab 支持的平台有：Window、Mac OS X、Linux，下载地址为：[http://lab.ionic.io/](http://lab.ionic.io/) ，下载后直接安装即可。整个操作界面如下所示：
-<img alt="Ionic Lab" src="/images/lab-preview.png" class="floatnone"/>
+![](/assets/lab-preview.png)
 通过以上界面你可以完成以下操作：
 创建应用
 预览应用
@@ -156,6 +145,6 @@ Set to true to suppress the UID/GID switching when running package scripts. If s
 ### css组件
 参考我的另一篇文章：[ionic中文详解CSS组件](http://www.haomou.net/2014/08/09/2014_ionic_api_css/ )
 ### 谢谢！
-转载请注明出处：http://www.haomou.net/2014/08/07/2014_ionic/
+有问题请留言。T_T  别忘了给我点亮GIT星星哦！
+欢迎关注我的博客: [皓眸大前端](http://www.haomou.net/)
 
-有问题请留言。T_T  皓眸大前端开发学习  T_T
